@@ -240,17 +240,32 @@
       <div class="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
         <div class="max-w-md w-full p-6">
           <h1 class="text-3xl font-semibold mb-6 text-black text-center">
-            Log in
+            SignUp
           </h1>
           <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">
-            Join Our Community with all time access and free
+            Join to Our Community with all time access and free
           </h1>
 
           <form @submit.prevent="handleSubmit" class="space-y-4">
             <div>
               <label
-                htmlFor="email"
-                class="block text-sm font-medium text-gray-700"
+                for="username"
+                class="block text-sm font-medium text-gray-700 text-center"
+                >Username</label
+              >
+              <input
+                type="text"
+                name="username"
+                v-model="username"
+                @input="validateUsername"
+                class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+              />
+              <span v-if="nameError" class="text-red-600 text-sm">{{
+                nameError
+              }}</span>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 text-center"
               >
                 Email
               </label>
@@ -268,8 +283,8 @@
             </div>
             <div>
               <label
-                htmlFor="password"
-                class="block text-sm font-medium text-gray-700"
+                for="password"
+                class="block text-sm font-medium text-gray-700 text-center"
               >
                 Password
               </label>
@@ -291,7 +306,7 @@
                 class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                 :disabled="!isValidForm"
               >
-                Log In
+                Signup
               </button>
             </div>
           </form>
@@ -303,9 +318,9 @@
           </div>
           <div class="mt-4 text-sm text-gray-600 text-center">
             <p>
-              Don't have an account?
-              <button class="text-black hover:underline" @click="Signup">
-                Signup here
+              Already have an account?
+              <button class="text-black hover:underline" @click="Login">
+                Login here
               </button>
             </p>
           </div>
@@ -315,8 +330,88 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import Cookies from "js-cookie";
+
 export default {
   name: "SignUp",
+  data() {
+    return {
+      username: "",
+      email: "",
+      password: "",
+      errorMessage: "",
+      nameError: "",
+      emailError: "",
+      passwordError: "",
+    };
+  },
+  computed: {
+    isValidForm() {
+      return (
+        this.username &&
+        !this.nameError &&
+        this.email &&
+        !this.emailError &&
+        this.password &&
+        !this.passwordError
+      );
+    },
+  },
+  methods: {
+    validateUsername() {
+      if (!this.username) {
+        this.nameError = "Username is required";
+      } else if (this.username.length < 3) {
+        this.nameError = "Username should be at least 3 characters";
+      } else {
+        this.nameError = "";
+      }
+    },
+    validateEmail() {
+      const emailpattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!this.email) {
+        this.emailError = "Email is required";
+      } else if (!emailpattern.test(this.email)) {
+        this.emailError = "Invalid Email Format";
+      } else {
+        this.emailError = "";
+      }
+    },
+    validatePassword() {
+      if (!this.password) {
+        this.passwordError = "Password is required";
+      } else if (this.password.length < 6) {
+        this.passwordError = "Password must be at least 6 characters";
+      } else {
+        this.passwordError = "";
+      }
+    },
+    Login() {
+      this.$router.push("/login");
+    },
+    async handleSubmit() {
+      try {
+        const response = await axios.post("http://localhost:8000/register", {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        });
+        Cookies.set("token", response.data.token, { expires: 0.5 });
+        this.errorMessage = "Signup Successfully";
+        setTimeout(() => {
+          this.$router.push("/"); // for navigate to home page
+        }, 3000);
+      } catch (err) {
+        if (err.response && err.response.status === 400) {
+          this.errorMessage =
+            err.response.data.message || "signup failed: Invalid credentials";
+        } else {
+          this.errorMessage = "An unexpected error occurred.";
+        }
+        console.error("signup failed:", err);
+      }
+    },
+  },
 };
 </script>
-<style lang=""></style>
