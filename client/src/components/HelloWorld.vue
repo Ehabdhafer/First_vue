@@ -1,4 +1,5 @@
 <template>
+  <AllBlogs />
   <div class="hello">
     <p>
       For a guide and recipes on how to configure / customize this project,<br />
@@ -86,8 +87,12 @@
 </template>
 
 <script>
+import AllBlogs from "./blogs.vue";
 export default {
   name: "HelloWorld",
+  components: {
+    AllBlogs,
+  },
   props: {
     msg: String,
   },
