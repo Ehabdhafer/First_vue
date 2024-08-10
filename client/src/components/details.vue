@@ -24,7 +24,7 @@
         </div>
         <div>
           <span class="font-bold text-gray-700 dark:text-gray-300">
-            Blog Description :
+            Blog Description:
           </span>
           <span class="text-gray-600 dark:text-gray-300 text-sm mt-2 text-left">
             {{ blog.description }}
