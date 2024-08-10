@@ -2,7 +2,13 @@
   <div>
     <div class="flex flex-wrap justify-evenly">
       <div v-for="(blog, blog_id) in blogs" :key="blog_id" class="mt-3">
-        <img :src="blog.image" alt="blog img" class="size-80" />
+        <img
+          :src="blog.image"
+          alt="blog img"
+          class="size-80"
+          @click="details(blog.blog_id)"
+          style="cursor: pointer"
+        />
         <div>
           <div>
             Author :
@@ -30,6 +36,9 @@ export default {
     await this.fetchData();
   },
   methods: {
+    details(id) {
+      this.$router.push(`/${id}`);
+    },
     async fetchData() {
       try {
         const response = await axios.get("http://localhost:8000/getblog");
