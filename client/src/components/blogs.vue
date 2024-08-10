@@ -1,9 +1,17 @@
 <template>
   <div>
-    <div>
-      <ul>
-        <li></li>
-      </ul>
+    <div class="flex flex-wrap justify-evenly">
+      <div v-for="(blog, blog_id) in blogs" :key="blog_id" class="mt-3">
+        <img :src="blog.image" alt="blog img" class="size-80" />
+        <div>
+          <div>
+            Author :
+            {{ blog.author.charAt(0).toUpperCase() + blog.author.slice(1) }}
+          </div>
+          <div>Title : {{ blog.title }}</div>
+          <div>City : {{ blog.city }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,12 +26,14 @@ export default {
       blogs: [],
     };
   },
+  async created() {
+    await this.fetchData();
+  },
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get("http://localhost:8000/getblog", {
-          blogs: this.blogs,
-        });
+        const response = await axios.get("http://localhost:8000/getblog");
+        this.blogs = response.data;
         console.log(response.data);
       } catch (err) {
         console.error("error fetching data", err);
