@@ -30,7 +30,7 @@
             {{ blog.description }}
           </span>
         </div>
-        <div class="flex flex-wrap gap-4">
+        <div v-if="token" class="flex flex-wrap gap-4">
           <button
             class="text-white bg-blue-600 hover:bg-blue-500 w-16 mt-4 rounded-lg"
           >
