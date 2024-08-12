@@ -67,7 +67,15 @@
             <label class="block text-gray-700">Title:</label>
             <input
               type="text"
-              v-model="form.title"
+              v-model="blog.title"
+              class="w-full p-2 border rounded-lg"
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Author:</label>
+            <input
+              type="text"
+              v-model="blog.author"
               class="w-full p-2 border rounded-lg"
             />
           </div>
@@ -75,11 +83,18 @@
             <label class="block text-gray-700">City:</label>
             <input
               type="text"
-              v-model="form.city"
+              v-model="blog.city"
               class="w-full p-2 border rounded-lg"
             />
           </div>
-          <!-- Add more fields as necessary -->
+          <div class="mb-4">
+            <label class="block text-gray-700">Description:</label>
+            <textarea
+              type="text"
+              v-model="blog.description"
+              class="w-full p-2 border rounded-lg"
+            />
+          </div>
           <div class="flex justify-end">
             <button
               type="button"
@@ -110,7 +125,7 @@ export default {
   data() {
     return {
       blog: {},
-      form: {},
+      // form: {},
       id: this.$route.params.id,
       loading: true,
       token: Cookies.get("token"),
@@ -154,7 +169,7 @@ export default {
         const token = Cookies.get("token");
         await axios.put(
           `http://localhost:8000/updateblog/${this.id}`,
-          this.form,
+          this.blog,
           {
             headers: {
               Authorization: `Bearer ${token}`,
