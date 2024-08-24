@@ -368,7 +368,10 @@ export default {
         this.errorMessage = "Login Successfully";
         setTimeout(() => {
           this.$router.push("/"); // for navigate to home page
-        }, 3000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        }, 1000);
       } catch (err) {
         if (err.response && err.response.status === 400) {
           this.errorMessage =
